@@ -1,6 +1,13 @@
-import { useMemo, useState } from 'preact/hooks'
-import panel from './assets/panel.png'
 import { FunctionComponent, JSX } from 'preact'
+import { LargeComponent, RowComponents, SmallComponent, useStore } from './store'
+
+import panel from './assets/panel.png'
+import jack from './assets/jack.png'
+import potentiometer from './assets/potentiometer.png'
+import encoder from './assets/encoder.png'
+import trimmer from './assets/trimmer.png'
+import sw from './assets/switch.png'
+import button from './assets/button.png'
 
 const SmallComponents = () => <>
   <option value="jack-mono">Mono jack</option>
@@ -21,14 +28,6 @@ const ComponentSelect: FunctionComponent<JSX.SelectHTMLAttributes & { type: 'sma
     {props.type === 'large' ? <LargeComponents /> : <SmallComponents />}
   </select>
 </span>
-
-import jack from './assets/jack.png'
-import potentiometer from './assets/potentiometer.png'
-import encoder from './assets/encoder.png'
-import trimmer from './assets/trimmer.png'
-import sw from './assets/switch.png'
-import button from './assets/button.png'
-import { LargeComponent, RowComponents, SmallComponent, useStore } from './store'
 
 const componentImages: Partial<Record<SmallComponent | LargeComponent, string>> = {
   "jack-mono": jack,

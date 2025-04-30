@@ -28,6 +28,7 @@ import encoder from './assets/encoder.png'
 import trimmer from './assets/trimmer.png'
 import sw from './assets/switch.png'
 import button from './assets/button.png'
+import { LargeComponent, RowComponents, SmallComponent, useStore } from './store'
 
 const componentImages: Partial<Record<SmallComponent | LargeComponent, string>> = {
   "jack-mono": jack,
@@ -39,24 +40,14 @@ const componentImages: Partial<Record<SmallComponent | LargeComponent, string>> 
   button
 }
 
-type SmallComponent =
-  | "jack-mono"
-  | "jack-stereo"
-  | "switch"
-  | "button"
-
-type LargeComponent = "potentiometer" | "trimmer" | "encoder"
-
-type RowComponents =
-  | { type: 'large', centre: LargeComponent }
-  | { type: 'small', left: SmallComponent | undefined, right: SmallComponent | undefined }
-
 const Component: FunctionComponent<{ component: SmallComponent | LargeComponent }> = ({ component }) => <span className={`component component--${component}`}>
   <img src={componentImages[component]} alt={component} />
 </span>
 
-const Row = () => {
-  const [components, setComponents] = useState<RowComponents | undefined>()
+const Row: FunctionComponent<{ column: number, row: number }> = ({ column, row }) => {
+  // const [components, setComponents] = useState<RowComponents | undefined>()
+  const components = useStore(state => state.columns[column][row])
+  const setComponents = useStore(state => state.setRowComponents)
 
   return <div class="row">
     {components ? (
@@ -64,51 +55,58 @@ const Row = () => {
         <Component component={components.centre} /> : <>
           {components.left ? <Component component={components.left} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
+              column, row,
               c => ({ ...(c as RowComponents & { type: 'small' }), left: event.currentTarget.value as SmallComponent })
             )} />
           }
           {components.right ? <Component component={components.right} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
+              column, row,
               c => ({ ...(c as RowComponents & { type: 'small' }), right: event.currentTarget.value as SmallComponent })
             )} />
           }
         </>
     ) : <>
       <ComponentSelect type='small' onChange={(event) => setComponents(
-        { type: 'small', left: event.currentTarget.value as SmallComponent, right: undefined }
+        column, row,
+        () => ({ type: 'small', left: event.currentTarget.value as SmallComponent, right: undefined })
       )} />
       <ComponentSelect type='large' onChange={(event) => setComponents(
-        { type: 'large', centre: event.currentTarget.value as LargeComponent }
+        column, row,
+        () => ({ type: 'large', centre: event.currentTarget.value as LargeComponent })
       )} />
       <ComponentSelect type='small' onChange={(event) => setComponents(
-        { type: 'small', right: event.currentTarget.value as SmallComponent, left: undefined }
+        column, row,
+        () => ({ type: 'small', right: event.currentTarget.value as SmallComponent, left: undefined })
       )} />
     </>}
   </div>
 }
 
-const Column: FunctionComponent<{}> = () => <section class='column'>
+const Column: FunctionComponent<{ column: number }> = ({ column }) => <section class='column'>
   <img src={panel} alt="" />
 
-  <Row />
-  <Row />
-  <Row />
-  <Row />
-  <Row />
-  <Row />
+  <Row column={column} row={0} />
+  <Row column={column} row={1} />
+  <Row column={column} row={2} />
+  <Row column={column} row={3} />
+  <Row column={column} row={4} />
+  <Row column={column} row={5} />
 </section>
 
 export function App() {
-  const [columns, setColumns] = useState(1)
+  const columns = useStore(store => store.columns)
+  const addColumn = useStore(store => store.addColumn)
+  const removeColumn = useStore(store => store.removeColumn)
 
   return <>
     <section class="controls">
-      <button onClick={() => setColumns(c => c + 1)} disabled={columns >= 8}>+</button>
-      <button onClick={() => setColumns(c => c - 1)} disabled={columns <= 1}>-</button>
+      <button onClick={() => addColumn()} disabled={columns.length >= 8}>+</button>
+      <button onClick={() => removeColumn()} disabled={columns.length <= 1}>-</button>
     </section>
     <main className='panel'>
-      {Array.from({ length: columns }, (_,i) =>
-        <Column key={i} />
+      {columns.map((_,i) =>
+        <Column key={i} column={i} />
       )}
     </main>
   </>

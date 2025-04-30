@@ -12,13 +12,32 @@ const SmallComponents = () => <>
 const LargeComponents = () => <>
   <option value="potentiometer">Potentiometer</option>
   <option value="trimmer">Trimmer</option>
-  <option value="rotary-encoder">Rotary encoder</option>
+  <option value="encoder">Rotary encoder</option>
 </>
 
-const ComponentSelect: FunctionComponent<JSX.SelectHTMLAttributes & { type: 'small' | 'large' }> = (props) => <select {...props} class="component">
-  <option value={undefined}></option>
-  {props.type === 'large' ? <LargeComponents /> : <SmallComponents />}
-</select>
+const ComponentSelect: FunctionComponent<JSX.SelectHTMLAttributes & { type: 'small' | 'large' }> = (props) => <span className="component">
+  <select {...props} class="component">
+    <option value={undefined}></option>
+    {props.type === 'large' ? <LargeComponents /> : <SmallComponents />}
+  </select>
+</span>
+
+import jack from './assets/jack.png'
+import potentiometer from './assets/potentiometer.png'
+import encoder from './assets/encoder.png'
+import trimmer from './assets/trimmer.png'
+import sw from './assets/switch.png'
+import button from './assets/button.png'
+
+const componentImages: Partial<Record<SmallComponent | LargeComponent, string>> = {
+  "jack-mono": jack,
+  "jack-stereo": jack,
+  potentiometer,
+  encoder,
+  trimmer,
+  switch: sw,
+  button
+}
 
 type SmallComponent =
   | "jack-mono"
@@ -26,11 +45,15 @@ type SmallComponent =
   | "switch"
   | "button"
 
-type LargeComponent = "potentiometer" | "trimmer" | "rotary-encoder"
+type LargeComponent = "potentiometer" | "trimmer" | "encoder"
 
 type RowComponents =
   | { type: 'large', centre: LargeComponent }
   | { type: 'small', left: SmallComponent | undefined, right: SmallComponent | undefined }
+
+const Component: FunctionComponent<{ component: SmallComponent | LargeComponent }> = ({ component }) => <span className={`component component--${component}`}>
+  <img src={componentImages[component]} alt={component} />
+</span>
 
 const Row = () => {
   const [components, setComponents] = useState<RowComponents | undefined>()
@@ -38,13 +61,13 @@ const Row = () => {
   return <div class="row">
     {components ? (
       components.type === 'large' ?
-        <span>{components.centre[0]}</span> : <>
-          {components.left ? <span>{components.left[0]}</span> :
+        <Component component={components.centre} /> : <>
+          {components.left ? <Component component={components.left} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
               c => ({ ...(c as RowComponents & { type: 'small' }), left: event.currentTarget.value as SmallComponent })
             )} />
           }
-          {components.right ? <span>{components.right[0]}</span> :
+          {components.right ? <Component component={components.right} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
               c => ({ ...(c as RowComponents & { type: 'small' }), right: event.currentTarget.value as SmallComponent })
             )} />

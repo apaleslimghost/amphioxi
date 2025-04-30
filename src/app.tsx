@@ -45,7 +45,6 @@ const Component: FunctionComponent<{ component: SmallComponent | LargeComponent 
 </span>
 
 const Row: FunctionComponent<{ column: number, row: number }> = ({ column, row }) => {
-  // const [components, setComponents] = useState<RowComponents | undefined>()
   const components = useStore(state => state.columns[column][row])
   const setComponents = useStore(state => state.setRowComponents)
 

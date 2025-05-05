@@ -55,9 +55,16 @@ const smallComponentPinouts: Record<SmallComponent, SmallComponentPinout> = {
   button: ['1', '2/LED K', 'LED A']
 }
 
-const Component: FunctionComponent<{ component: SmallComponent | LargeComponent }> = ({ component }) => <span className={`component component--${component}`}>
-  <img src={componentImages[component]} alt={component} />
-</span>
+
+const Component: FunctionComponent<{
+  component: SmallComponent | LargeComponent,
+  onDelete: () => void
+}> = ({ component, onDelete }) => {
+  return <span className={`component component--${component}`}>
+    <button onClick={onDelete}>&times;</button>
+    <img src={componentImages[component]} alt={component} />
+  </span>
+}
 
 const Row: FunctionComponent<{ column: number, row: number }> = ({ column, row }) => {
   const components = useStore(state => state.columns[column][row])
@@ -67,13 +74,17 @@ const Row: FunctionComponent<{ column: number, row: number }> = ({ column, row }
   return <div class="row">
     {components ? (
       components.type === 'large' ?
-        <Component component={components.centre} /> : <>
-          {components.left ? <Component component={components.left} /> :
+        <Component component={components.centre} onDelete={() => setComponents(() => undefined)} /> : <>
+          {components.left ? <Component component={components.left} onDelete={() => setComponents(
+            c => ({...c as RowComponents & { type: 'small' }, left: undefined})
+          )} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
               c => ({ ...(c as RowComponents & { type: 'small' }), left: event.currentTarget.value as SmallComponent })
             )} />
           }
-          {components.right ? <Component component={components.right} /> :
+          {components.right ? <Component component={components.right} onDelete={() => setComponents(
+            c => ({...c as RowComponents & { type: 'small' }, right: undefined})
+          )} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
               c => ({ ...(c as RowComponents & { type: 'small' }), right: event.currentTarget.value as SmallComponent })
             )} />

@@ -154,8 +154,11 @@ body {
   --component-size: 2.4vh;
   --background-opacity: 0.5;
 
-  appearance: none;
   width: var(--component-size);
+}
+
+.component select, .component button {
+  appearance: none;
   background: rgb(from var(--colour-magenta) r g b / var(--background-opacity));
   border-radius: 50%;
   border: 0 none;
@@ -166,26 +169,41 @@ body {
   --background-opacity: 0.75;
 }
 
-.component--potentiometer img,
-.component--encoder img {
+.component--potentiometer,
+.component--encoder {
   --component-size: calc(var(--mm) * 12);
 }
 
-.component--trimmer img {
+.component--trimmer {
   --component-size: calc(var(--mm) * 6);
 }
 
-.component--switch img {
+.component--switch {
   --component-size: calc(var(--mm) * 7);
 }
 
-.component--jack-stereo img,
-.component--jack-mono img {
+.component--jack-stereo,
+.component--jack-mono {
   --component-size: calc(var(--mm) * 8);
 }
 
-.component--button img {
+.component--button {
   --component-size: calc(var(--mm) * 6);
+}
+
+.component button {
+  position: absolute;
+  z-index: 1;
+  left: calc(-1 * var(--component-size) / 2);
+  top: calc(-1 * var(--component-size) / 2);
+  font-size: 0.8em;
+  display: none;
+  color: white;
+  --background-opacity: 0.75;
+}
+
+.component:hover button {
+  display: block;
 }
 
 .row {

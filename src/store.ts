@@ -29,7 +29,7 @@ type State = {
 	columns: Column[],
 	addColumn: () => void,
 	removeColumn: () => void,
-	setRowComponents: (c: number, r: number, co: (c: Row) => RowComponents) => void,
+	setRowComponents: (c: number, r: number, co: (c: Row) => Row) => void,
 	mode: 'panel' | 'pinout',
 	toggleMode: () => void
 }

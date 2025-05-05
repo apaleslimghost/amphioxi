@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { combine, createJSONStorage, persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 export type SmallComponent =
@@ -25,10 +25,20 @@ type Column = [
 	Row
 ]
 
-export const useStore = create<{ columns: Column[], addColumn: () => void, removeColumn: () => void, setRowComponents: (c: number, r: number, co: (c: Row) => RowComponents) => void }>()(
+type State = {
+	columns: Column[],
+	addColumn: () => void,
+	removeColumn: () => void,
+	setRowComponents: (c: number, r: number, co: (c: Row) => RowComponents) => void,
+	mode: 'panel' | 'pinout',
+	toggleMode: () => void
+}
+
+export const useStore = create<State>()(
 	persist(
 		immer(
 			(set) => ({
+				mode: 'panel',
 				columns: [
 					[undefined, undefined, undefined, undefined, undefined, undefined]
 				],
@@ -40,6 +50,9 @@ export const useStore = create<{ columns: Column[], addColumn: () => void, remov
 				}),
 				setRowComponents: (column: number, row: number, components: (c: Row) => RowComponents) => set(state => {
 					state.columns[column][row] = components(state.columns[column][row])
+				}),
+				toggleMode: () => set(state => {
+					state.mode = (state.mode == 'panel') ? 'pinout' : 'panel'
 				})
 			}),
 		),
@@ -49,3 +62,13 @@ export const useStore = create<{ columns: Column[], addColumn: () => void, remov
 		}
 	)
 )
+
+export const useSelectors = <Key extends keyof State>(keys: Key[]): Pick<State, Key> => {
+	const s: Partial<State> = {}
+
+	for(const k of keys) {
+		s[k] = useStore(state => state[k])
+	}
+
+	return s as Pick<State, Key>
+}

@@ -5,6 +5,7 @@
 
   --colour-indigo: #5623AE;
   --colour-magenta: #BA0C98;
+  --colour-soldermask: #110F0E;
 
   --mm: calc(90vh / 128.5);
 
@@ -37,21 +38,104 @@ body {
 }
 
 .column {
+  position: relative;
+  width: calc(var(--mm) * 20.32);
   display: flex;
   flex-direction: column;
-  position: relative;
-  height: 90vh;
-  aspect-ratio: 20.3 / 128.5; /* dw about it */
-  justify-content: space-around;
-  padding-block: 9.5vh;
 }
 
 .column > img {
   position: absolute;
-  height: 90vh;
   width: auto;
   top: 0;
 }
+
+.column--panel {
+  padding-block: 9.5vh;
+  justify-content: space-around;
+}
+
+.column--pinout {
+  justify-content: space-between;
+  background: var(--colour-soldermask);
+  color: white;
+}
+
+.column--panel, .column--panel img {
+  height: calc(var(--mm) * 128.5);
+}
+
+.column--pinout, .column--pinout img {
+  height: calc(var(--mm) * 109.22);
+}
+
+/*
+
+.pinout {
+  display: flex;
+}
+
+.pinout--bottom {
+  rotate: 180deg;
+}
+
+.pins {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+  font-size: var(--mm);
+
+  display: grid;
+  grid-template-columns: calc(2 * var(--mm)) calc(2 * var(--mm)) calc(2 * var(--mm));
+  grid-template-rows: calc(2 * var(--mm)) calc(2 * var(--mm));
+}
+
+.pinout--top .pins:not(.pins--bus) li:nth-child(even) {
+  grid-row-start: 1;
+}
+
+.pinout--top .pins:not(.pins--bus) li:nth-child(odd) {
+  grid-row-start: 2;
+}
+
+.pin-label {
+  position: absolute;
+}
+
+.pins--bus {
+  grid-template-columns: calc(2 * var(--mm));
+}
+
+.pins li {
+  white-space: nowrap;
+  transform-origin: calc(0.675 * var(--mm)) calc(0.675 * var(--mm));
+}
+
+.pins li:nth-child(even) {
+  rotate: -90deg;
+}
+
+.pins li:nth-child(odd) {
+  rotate: 90deg;
+}
+
+.pins li::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(0.8 * var(--mm));
+  height: calc(0.8 * var(--mm));
+  border: calc(0.275 * var(--mm)) solid gold;
+  border-radius: 50%;
+}
+
+.pins li:first-child::before {
+  border-radius: 25%;
+  border: calc(0.275 * var(--mm)) solid gold;
+}
+
+*/
 
 .component {
   position: relative;

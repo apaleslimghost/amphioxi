@@ -76,14 +76,18 @@ const Row: FunctionComponent<{ column: number, row: number }> = ({ column, row }
       components.type === 'large' ?
         <Component component={components.centre} onDelete={() => setComponents(() => undefined)} /> : <>
           {components.left ? <Component component={components.left} onDelete={() => setComponents(
-            c => ({...c as RowComponents & { type: 'small' }, left: undefined})
+            c => c && c.type === 'small' && c.right === undefined
+              ? undefined
+              : ({...c as RowComponents & { type: 'small' }, left: undefined})
           )} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
               c => ({ ...(c as RowComponents & { type: 'small' }), left: event.currentTarget.value as SmallComponent })
             )} />
           }
           {components.right ? <Component component={components.right} onDelete={() => setComponents(
-            c => ({...c as RowComponents & { type: 'small' }, right: undefined})
+            c => c && c.type === 'small' && c.left === undefined
+              ? undefined
+              : ({...c as RowComponents & { type: 'small' }, right: undefined})
           )} /> :
             <ComponentSelect type='small' onChange={event => setComponents(
               c => ({ ...(c as RowComponents & { type: 'small' }), right: event.currentTarget.value as SmallComponent })

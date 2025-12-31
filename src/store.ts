@@ -7,6 +7,7 @@ export type SmallComponent =
   | "jack-stereo"
   | "switch"
   | "button"
+  | "led"
 
 export type LargeComponent = "potentiometer" | "trimmer" | "encoder"
 

@@ -14,6 +14,7 @@ const SmallComponents = () => <>
   <option value="jack-stereo">Stereo jack</option>
   <option value="switch">Sub-mini toggle switch</option>
   <option value="button">LED button</option>
+  <option value="led">LED</option>
 </>
 
 const LargeComponents = () => <>
@@ -36,7 +37,8 @@ const componentImages: Record<SmallComponent | LargeComponent, string> = {
   encoder,
   trimmer,
   switch: sw,
-  button
+  button,
+  led: button
 }
 
 type LargeComponentPinout = [string, string, string, string, string, string]
@@ -52,7 +54,8 @@ const smallComponentPinouts: Record<SmallComponent, SmallComponentPinout> = {
   'jack-mono': ['sleeve', 'tip', 'normal'],
   'jack-stereo': ['sleeve', 'tip', 'ring'],
   switch: ['1', '3', '2'],
-  button: ['1', '2/LED K', 'LED A']
+  button: ['1', '2/LED K', 'LED A'],
+  led: ['LED K', 'LED A', '×']
 }
 
 
@@ -132,8 +135,6 @@ const Pinout: FunctionComponent<{location: 'top' | 'bottom', column: number}> = 
       <li><span className='pin-label'>+</span></li>
     </ol>
     {rows.map((row, i) => <ol className='pins'>
-      <h4>{rowLabels[rowIndex + i]}</h4>
-
       {!row ? Array.from({length: 6}, () => <li>&times;</li>) :
       row.type === 'large' ? <>
         {largeComponentPinouts[row.centre].map(

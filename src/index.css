@@ -109,8 +109,8 @@ body {
 
 .pins li {
   white-space: nowrap;
-  transform-origin: calc(0.675 * var(--mm)) calc(0.675 * var(--mm));
 }
+
 
 .pins li:nth-child(even) {
   rotate: -90deg;
@@ -185,6 +185,10 @@ body {
 .component--jack-stereo,
 .component--jack-mono {
   --component-size: calc(var(--mm) * 8);
+}
+
+.component--led {
+  --component-size: calc(var(--mm) * 3);
 }
 
 .component--button {

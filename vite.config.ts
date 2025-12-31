@@ -4,5 +4,5 @@ import preact from "@preact/preset-vite";
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
 	plugins: [preact()],
-	base: command === "serve" ? "/" : "/bard",
+	base: command === "serve" ? "/" : "/amphioxi",
 }));
